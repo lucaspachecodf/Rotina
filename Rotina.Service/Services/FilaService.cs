@@ -37,7 +37,6 @@ namespace Rotina.Service.Services
                                 NamingStrategy = new SnakeCaseNamingStrategy()
                             }
                         };
-
                         return JsonConvert.DeserializeObject<MoedaDTO>(contentResult, settings);
                     }
                 }
