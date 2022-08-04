@@ -3,9 +3,10 @@ using Newtonsoft.Json;
 using Rotina.Domain.Contracts;
 using Rotina.Domain.Dtos;
 using Rotina.Service.Config;
-using System.Collections.Generic;
-using System.Net.Http;
+using System;
 using System.Threading.Tasks;
+using System.Net.Http;
+using Newtonsoft.Json.Serialization;
 
 namespace Rotina.Service.Services
 {
@@ -17,21 +18,34 @@ namespace Rotina.Service.Services
             _config = config;
         }
 
-        public async Task<ICollection<MoedaDTO>> GetItemFila()
+        public async Task<MoedaDTO> GetItemFila()
         {
-            var host = $"{UtilConfig.GetUri(_config)}/GetItemFila";
-
+            var host = $"{UtilConfig.GetUri(_config)}/GetItemFila";            
             using (var client = new HttpClient())
-            {                
-                var result = await client.GetAsync(host);
-
-                if (result.IsSuccessStatusCode)
+            {
+                try
                 {
-                    var contentResult = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-                    return JsonConvert.DeserializeObject<ICollection<MoedaDTO>>(contentResult);
+                    var result = await client.GetAsync(host);
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var contentResult = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+                        var settings = new JsonSerializerSettings
+                        {
+                            ContractResolver = new DefaultContractResolver()
+                            {
+                                NamingStrategy = new SnakeCaseNamingStrategy()
+                            }
+                        };
+
+                        return JsonConvert.DeserializeObject<MoedaDTO>(contentResult, settings);
+                    }
+                }
+                catch (Exception ex)
+                {
+
                 }
             }
-
             return null;
         }
     }

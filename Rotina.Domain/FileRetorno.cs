@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rotina.Domain
 {
-    public class Retorno
+    public class FileRetorno
     {
 
     }
