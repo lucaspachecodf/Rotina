@@ -45,6 +45,12 @@ namespace Rotina.Domain
                 }
                 _dadosRetorno.GerarArquivoRetorno(retorno);
             }
+            else
+            {
+                string mensagem = "Nenhum dado retornado da API";
+                Console.WriteLine(mensagem);
+                Log.LoggerRetorno.Info(mensagem);
+            }
         }
 
         private ICollection<DadosMoedaDTO> AgruparMoedas(List<DadosMoedaDTO> moedas) => moedas.GroupBy(g => new { g.IdMoeda }).Select(m => m.First()).ToList();
