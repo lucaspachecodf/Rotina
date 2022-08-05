@@ -5,6 +5,7 @@ using Rotina.Domain.Contracts;
 using Rotina.IoC;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Rotina
@@ -30,6 +31,8 @@ namespace Rotina
 
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             var hostBuilder = Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, builder) =>
                 {

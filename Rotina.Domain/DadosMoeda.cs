@@ -1,49 +1,63 @@
-﻿using CsvHelper;
-using Rotina.Domain.Contracts;
+﻿using Rotina.Domain.Contracts;
 using Rotina.Domain.Dtos;
+using Rotina.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Rotina.Domain
 {
-    public class DadosMoeda : IDadosMoeda
+    public class DadosMoeda : DadosBase, IDadosMoeda
     {
         private readonly IFilaService _filaService;
-        public DadosMoeda(IFilaService filaService)
+        private readonly IDadosCotacao _dadosCotacao;
+
+        public DadosMoeda(IFilaService filaService, IDadosCotacao dadosCotacao)
         {
             _filaService = filaService;
+            _dadosCotacao = dadosCotacao;
         }
 
         public async Task Iniciar()
         {
-            var itemsFila = await _filaService.GetItemFila();
-            if (itemsFila != null)
+            var itemFila = await _filaService.GetItemFila();
+            if (itemFila != null)
             {
-                List<DadosMoedaDTO> dadosFormatados = new List<DadosMoedaDTO>();
-                _ = DadosExtraidos(dadosFormatados);
+                var dadosMoedaExtraidos = DadosMoedaExtraidos();
+                var filtroDadosMoedaPorPeriodo = dadosMoedaExtraidos.Where(f => f.Data >= itemFila.DataInicio && f.Data <= itemFila.DataFim).ToList();
+                var dadosCotacaoFormatados = _dadosCotacao.DadosCotacaoExtraidos();
 
-                
+                foreach (var moeda in AgruparMoedas(dadosMoedaExtraidos))
+                {
+                    try
+                    {
+                        var tEnum = Enum.GetName(typeof(EMoeda), moeda);
+
+                        EMoeda codCotacao = (EMoeda)Enum.Parse(typeof(EMoeda), tEnum);
+                        var filtroCotacao = dadosCotacaoFormatados.Where(f => Convert.ToInt32(f.Codigo) == (int)codCotacao).ToList();
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
             }
         }
 
-        private List<DadosMoedaDTO> DadosExtraidos(List<DadosMoedaDTO> dadosFormatados)
-        {            
-            using var reader = new StreamReader($"{Environment.CurrentDirectory}\\DadosMoeda.csv");
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-            using var dr = new CsvDataReader(csv);
-            var dataTable = new DataTable();
-            dataTable.Load(dr);
-            for (int i = 0; i < dataTable.Rows.Count; i++)
+        private ICollection<string> AgruparMoedas(List<DadosMoedaDTO> moedas) => moedas.Distinct().Select(m => m.IdMoeda).ToList();
+
+        private List<DadosMoedaDTO> DadosMoedaExtraidos()
+        {
+            List<DadosMoedaDTO> dadosFormatados = new List<DadosMoedaDTO>();
+            DataSet dataSet = ObterDataSet($"{Environment.CurrentDirectory}\\DadosMoeda.csv");
+            foreach (DataRow row in dataSet.Tables[0].Rows)
             {
-                var row = dataTable.Rows[i].ItemArray[0].ToString();
-                string[] rowArray = row.Split(';');
-                dadosFormatados.Add(new DadosMoedaDTO { IdMoeda = rowArray[0], Data = Convert.ToDateTime(rowArray[1]) });
+                dadosFormatados.Add(new DadosMoedaDTO { IdMoeda = row[0].ToString(), Data = Convert.ToDateTime(row[1]) });
             }
             return dadosFormatados;
-        }        
+        }
     }
 }
