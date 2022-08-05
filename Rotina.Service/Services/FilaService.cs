@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json.Serialization;
+using Rotina.Domain.Helpers;
 
 namespace Rotina.Service.Services
 {
@@ -42,7 +43,7 @@ namespace Rotina.Service.Services
                 }
                 catch (Exception ex)
                 {
-
+                    Log.LoggerError.Error($"Serviço API: {ex.Message}");
                 }
             }
             return null;

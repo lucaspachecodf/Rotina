@@ -12,6 +12,7 @@ namespace Rotina.IoC
             services.AddScoped<IFilaService, FilaService>();
             services.AddScoped<IDadosMoeda, DadosMoeda>();
             services.AddScoped<IDadosCotacao, DadosCotacao>();
+            services.AddScoped<IDadosRetorno, DadosRetorno>();
         }
     }
 }

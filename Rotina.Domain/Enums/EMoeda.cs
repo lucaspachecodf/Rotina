@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Rotina.Domain.Enums
+﻿namespace Rotina.Domain.Enums
 {
     public enum EMoeda
     {
@@ -56,6 +54,23 @@ namespace Rotina.Domain.Enums
         SGD = 70,
         SLL = 10,
         SOS = 61,
-        SSP = 47
+        SSP = 47,
+        SZL = 55,
+        THB = 39,
+        TRY = 13,
+        TTD = 67,
+        UGX = 59,
+        USD = 1,
+        UYU = 46,
+        VES = 68,
+        VUV = 57,
+        WST = 28,
+        XAF = 30,
+        XAU = 60,
+        XDR = 27,
+        XOF = 14,
+        XPF = 50,
+        ZAR = 65,
+        ZWL = 31
     }
 }

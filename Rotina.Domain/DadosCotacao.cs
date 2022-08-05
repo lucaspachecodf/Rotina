@@ -1,5 +1,6 @@
 ﻿using Rotina.Domain.Contracts;
 using Rotina.Domain.Dtos;
+using Rotina.Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,8 +12,9 @@ namespace Rotina.Domain
     {
         public List<DadosCotacaoDTO> DadosCotacaoExtraidos()
         {
+            Console.WriteLine("Extraindo os dados da cotação no arquivo .csv");
             List<DadosCotacaoDTO> dadosFormatados = new List<DadosCotacaoDTO>();
-            DataSet dataSet = ObterDataSet($"{Environment.CurrentDirectory}\\DadosCotacao.csv");
+            DataSet dataSet = ObterDataSet(Util.FilePathDadosCotacao);
             dadosFormatados.AddRange(from DataRow row in dataSet.Tables[0].Rows
                                      select new DadosCotacaoDTO { ValorCotacao = Convert.ToDecimal(row[0]), Codigo = Convert.ToInt32(row[1]), Data = Convert.ToDateTime(row[2]) });
             return dadosFormatados;
