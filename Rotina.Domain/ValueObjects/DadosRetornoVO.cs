@@ -11,9 +11,9 @@ namespace Rotina.Domain.ValueObjects
         [Format("dd/MM/yyyy")]
         public DateTime Data { get; set; }
         [Name("VL_COTACAO")]
-        public decimal ValorCotacao { get; set; }
+        public string ValorCotacao { get; set; }
 
-        public DadosRetornoVO(string moeda, DateTime data, decimal valorCotacao)
+        public DadosRetornoVO(string moeda, DateTime data, string valorCotacao)
         {
             Moeda = moeda;
             Data = data;

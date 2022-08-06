@@ -16,11 +16,8 @@ namespace Rotina.Domain
 
         public ICollection<DadosRetornoVO> Iniciar()
         {
-            if (DadosRetornoMontados == null)
-            {
+            if (DadosRetornoMontados == null)            
                 DadosRetornoMontados = new List<DadosRetornoVO>();
-                Console.WriteLine("Iniciando o retorno");
-            }
 
             return DadosRetornoMontados;
         }
@@ -40,9 +37,12 @@ namespace Rotina.Domain
         {
             if (dadosRetorno != null)
             {
+                Console.WriteLine("Iniciando o retorno");
                 Console.WriteLine($"Gerando arquivo de retorno .csv, no caminho {Util.RetornoPath}");
                 using var writer = new StreamWriter(Util.RetornoPath);
                 using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+                csv.WriteField("sep=,", false);
+                csv.NextRecord();
                 csv.WriteRecords(dadosRetorno);
             }
         }
