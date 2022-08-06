@@ -47,7 +47,7 @@ namespace Rotina.Domain
             }
             else
             {
-                string mensagem = "Nenhum dado retornado da API";
+                string mensagem = "Nenhum dado retornado da API ";
                 Console.WriteLine(mensagem);
                 Log.LoggerRetorno.Info(mensagem);
             }
